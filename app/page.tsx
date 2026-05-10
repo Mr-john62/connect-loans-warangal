@@ -131,26 +131,6 @@ export default function Home() {
 
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 mt-14">
-
-              <div>
-                <h3 className="text-3xl font-bold">10K+</h3>
-                <p className="text-gray-500 mt-1">Customers</p>
-              </div>
-
-              <div>
-                <h3 className="text-3xl font-bold">₹250Cr+</h3>
-                <p className="text-gray-500 mt-1">Loans Processed</p>
-              </div>
-
-              <div>
-                <h3 className="text-3xl font-bold">24 Hours</h3>
-                <p className="text-gray-500 mt-1">Approval Time</p>
-              </div>
-
-            </div>
-
           </div>
 
           {/* Loan Form */}
@@ -385,7 +365,7 @@ export default function Home() {
           <div>
 
             <h2 className="text-5xl font-bold mb-6">
-              Contact Loans Warangal
+              Contact Connect Warangal
             </h2>
 
             <p className="text-gray-600 text-lg mb-10">
