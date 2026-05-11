@@ -17,11 +17,14 @@ export default function Home() {
   // EMI CALCULATOR
   // =========================================
 
-  const [loanAmount, setLoanAmount] = useState(500000);
+  const [loanAmount, setLoanAmount] =
+    useState(500000);
 
-  const [interestRate, setInterestRate] = useState(16);
+  const [interestRate, setInterestRate] =
+    useState(16);
 
-  const [loanYears, setLoanYears] = useState(5);
+  const [loanYears, setLoanYears] =
+    useState(5);
 
   // =========================================
   // SCHEDULE TOGGLE
@@ -35,8 +38,6 @@ export default function Home() {
   // =========================================
 
   const months = loanYears * 12;
-
-  // Monthly Reducing Rate
 
   const monthlyRate =
     interestRate / 12 / 100;
@@ -553,6 +554,95 @@ export default function Home() {
             </button>
 
           </div>
+
+          {/* SCHEDULE */}
+
+          {showSchedule && (
+
+            <div className="mt-16 bg-white rounded-3xl shadow-2xl overflow-hidden">
+
+              <div className="bg-blue-600 text-white px-6 md:px-8 py-6">
+
+                <h2 className="text-2xl md:text-3xl font-bold">
+                  Loan Tenure Schedule
+                </h2>
+
+              </div>
+
+              <div className="overflow-x-auto max-h-[500px] overflow-y-auto">
+
+                <table className="w-full min-w-[900px] text-left">
+
+                  <thead className="bg-slate-100 sticky top-0">
+
+                    <tr>
+
+                      <th className="p-4 md:p-5 font-bold">
+                        Month
+                      </th>
+
+                      <th className="p-4 md:p-5 font-bold">
+                        EMI
+                      </th>
+
+                      <th className="p-4 md:p-5 font-bold">
+                        Interest
+                      </th>
+
+                      <th className="p-4 md:p-5 font-bold">
+                        Principal
+                      </th>
+
+                      <th className="p-4 md:p-5 font-bold">
+                        Balance
+                      </th>
+
+                    </tr>
+
+                  </thead>
+
+                  <tbody>
+
+                    {schedule.map((item, index) => (
+
+                      <tr
+                        key={index}
+                        className="border-b hover:bg-blue-50 transition"
+                      >
+
+                        <td className="p-4 md:p-5">
+                          {item.month}
+                        </td>
+
+                        <td className="p-4 md:p-5 font-semibold">
+                          ₹{item.emi}
+                        </td>
+
+                        <td className="p-4 md:p-5 text-red-500">
+                          ₹{item.interest}
+                        </td>
+
+                        <td className="p-4 md:p-5 text-green-600">
+                          ₹{item.principal}
+                        </td>
+
+                        <td className="p-4 md:p-5">
+                          ₹{item.balance}
+                        </td>
+
+                      </tr>
+
+                    ))}
+
+                  </tbody>
+
+                </table>
+
+              </div>
+
+            </div>
+
+          )}
 
         </div>
 
