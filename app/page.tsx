@@ -4,16 +4,19 @@ import { useState } from "react";
 
 export default function Home() {
 
-  // Inquiry Form
+  // Loan Inquiry Form
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [loanType, setLoanType] = useState("");
   const [loanValue, setLoanValue] = useState("");
 
-  // EMI Calculator
+  // EMI Calculator States
   const [loanAmount, setLoanAmount] = useState(500000);
   const [interestRate, setInterestRate] = useState(16);
   const [loanYears, setLoanYears] = useState(5);
+
+  // Schedule Toggle
+  const [showSchedule, setShowSchedule] = useState(false);
 
   // EMI Formula
   const monthlyRate = interestRate / 12 / 100;
@@ -99,12 +102,12 @@ export default function Home() {
 
       </header>
 
-      {/* Hero */}
+      {/* Hero Section */}
       <section className="pt-40 pb-24 bg-gradient-to-br from-blue-50 to-white">
 
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
 
-          {/* Left */}
+          {/* Left Content */}
           <div>
 
             <span className="bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold">
@@ -141,7 +144,7 @@ export default function Home() {
 
           </div>
 
-          {/* Form */}
+          {/* Inquiry Form */}
           <div>
 
             <div className="bg-white rounded-3xl shadow-2xl p-8">
@@ -317,7 +320,7 @@ export default function Home() {
 
             </div>
 
-            {/* EMI Result */}
+            {/* EMI Results */}
             <div className="bg-blue-600 text-white rounded-3xl p-10">
 
               <h3 className="text-3xl font-bold mb-8">
@@ -347,77 +350,97 @@ export default function Home() {
 
           </div>
 
-          {/* Amortization Schedule */}
-          <div className="mt-16 bg-white rounded-3xl shadow-2xl overflow-hidden">
+          {/* Schedule Button */}
+          <div className="mt-10 text-center">
 
-            <div className="bg-blue-600 text-white px-8 py-6">
+            <button
+              onClick={() => setShowSchedule(!showSchedule)}
+              className="bg-blue-600 text-white px-8 py-4 rounded-2xl text-lg font-semibold hover:bg-blue-700 transition"
+            >
 
-              <h2 className="text-3xl font-bold">
-                Loan Tenure Schedule
-              </h2>
+              {showSchedule
+                ? "Hide Loan Schedule"
+                : "View Loan Schedule"}
 
-              <p className="mt-2 text-blue-100">
-                Month-wise EMI repayment breakdown
-              </p>
+            </button>
 
-            </div>
+          </div>
 
-            <div className="overflow-x-auto">
+          {/* Schedule Table */}
+          {showSchedule && (
 
-              <table className="w-full min-w-[900px] text-left">
+            <div className="mt-16 bg-white rounded-3xl shadow-2xl overflow-hidden">
 
-                <thead className="bg-slate-100">
+              <div className="bg-blue-600 text-white px-8 py-6">
 
-                  <tr>
+                <h2 className="text-3xl font-bold">
+                  Loan Tenure Schedule
+                </h2>
 
-                    <th className="p-5 font-bold">Month</th>
-                    <th className="p-5 font-bold">EMI</th>
-                    <th className="p-5 font-bold">Interest</th>
-                    <th className="p-5 font-bold">Principal</th>
-                    <th className="p-5 font-bold">Balance</th>
+                <p className="mt-2 text-blue-100">
+                  Month-wise EMI repayment breakdown
+                </p>
 
-                  </tr>
+              </div>
 
-                </thead>
+              <div className="overflow-x-auto max-h-[500px] overflow-y-auto">
 
-                <tbody>
+                <table className="w-full min-w-[900px] text-left">
 
-                  {schedule.map((item, index) => (
+                  <thead className="bg-slate-100 sticky top-0">
 
-                    <tr
-                      key={index}
-                      className="border-b hover:bg-blue-50 transition"
-                    >
+                    <tr>
 
-                      <td className="p-5">{item.month}</td>
-
-                      <td className="p-5 font-semibold">
-                        ₹{item.emi}
-                      </td>
-
-                      <td className="p-5 text-red-500">
-                        ₹{item.interest}
-                      </td>
-
-                      <td className="p-5 text-green-600">
-                        ₹{item.principal}
-                      </td>
-
-                      <td className="p-5">
-                        ₹{item.balance}
-                      </td>
+                      <th className="p-5 font-bold">Month</th>
+                      <th className="p-5 font-bold">EMI</th>
+                      <th className="p-5 font-bold">Interest</th>
+                      <th className="p-5 font-bold">Principal</th>
+                      <th className="p-5 font-bold">Balance</th>
 
                     </tr>
 
-                  ))}
+                  </thead>
 
-                </tbody>
+                  <tbody>
 
-              </table>
+                    {schedule.map((item, index) => (
+
+                      <tr
+                        key={index}
+                        className="border-b hover:bg-blue-50 transition"
+                      >
+
+                        <td className="p-5">{item.month}</td>
+
+                        <td className="p-5 font-semibold">
+                          ₹{item.emi}
+                        </td>
+
+                        <td className="p-5 text-red-500">
+                          ₹{item.interest}
+                        </td>
+
+                        <td className="p-5 text-green-600">
+                          ₹{item.principal}
+                        </td>
+
+                        <td className="p-5">
+                          ₹{item.balance}
+                        </td>
+
+                      </tr>
+
+                    ))}
+
+                  </tbody>
+
+                </table>
+
+              </div>
 
             </div>
 
-          </div>
+          )}
 
         </div>
 
@@ -454,7 +477,7 @@ export default function Home() {
 
           </div>
 
-          {/* Map */}
+          {/* Google Map */}
           <div className="rounded-3xl overflow-hidden shadow-2xl">
 
             <iframe
