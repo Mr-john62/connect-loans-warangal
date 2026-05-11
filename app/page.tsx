@@ -18,18 +18,43 @@ export default function Home() {
   // Schedule Toggle
   const [showSchedule, setShowSchedule] = useState(false);
 
-  // EMI Formula
+  // REDUCING BALANCE EMI FORMULA
+
   const monthlyRate = interestRate / 12 / 100;
+
   const months = loanYears * 12;
 
-  const emi =
-    (loanAmount *
-      monthlyRate *
-      Math.pow(1 + monthlyRate, months)) /
-    (Math.pow(1 + monthlyRate, months) - 1);
+  let emi = 0;
+  let totalPayment = 0;
+  let totalInterest = 0;
+  let effectiveAnnualRate = 0;
 
-  const totalPayment = emi * months;
-  const totalInterest = totalPayment - loanAmount;
+  if (
+    loanAmount > 0 &&
+    interestRate > 0 &&
+    loanYears > 0
+  ) {
+
+    emi =
+      (
+        loanAmount *
+        monthlyRate *
+        Math.pow(1 + monthlyRate, months)
+      ) /
+      (
+        Math.pow(1 + monthlyRate, months) - 1
+      );
+
+    totalPayment = emi * months;
+
+    totalInterest = totalPayment - loanAmount;
+
+    // Effective Annual Rate
+    effectiveAnnualRate =
+      (
+        Math.pow(1 + monthlyRate, 12) - 1
+      ) * 100;
+  }
 
   // Loan Schedule
   const schedule = [];
@@ -39,6 +64,7 @@ export default function Home() {
   for (let i = 1; i <= months; i++) {
 
     const interest = balance * monthlyRate;
+
     const principal = emi - interest;
 
     balance -= principal;
@@ -48,7 +74,9 @@ export default function Home() {
       emi: emi.toFixed(0),
       interest: interest.toFixed(0),
       principal: principal.toFixed(0),
-      balance: balance > 0 ? balance.toFixed(0) : "0",
+      balance: balance > 0
+        ? balance.toFixed(0)
+        : "0",
     });
   }
 
@@ -64,7 +92,8 @@ export default function Home() {
 💰 Loan Amount: ₹${loanValue}
 `;
 
-    const whatsappUrl = `https://wa.me/919704193481?text=${encodeURIComponent(message)}`;
+    const whatsappUrl =
+      `https://wa.me/919704193481?text=${encodeURIComponent(message)}`;
 
     window.open(whatsappUrl, "_blank");
   };
@@ -213,7 +242,10 @@ export default function Home() {
       </section>
 
       {/* Services */}
-      <section id="services" className="py-16 md:py-24 bg-white">
+      <section
+        id="services"
+        className="py-16 md:py-24 bg-white"
+      >
 
         <div className="max-w-7xl mx-auto px-4 md:px-6">
 
@@ -258,8 +290,11 @@ export default function Home() {
 
       </section>
 
-      {/* EMI */}
-      <section id="emi" className="py-16 md:py-24 bg-slate-50">
+      {/* EMI Calculator */}
+      <section
+        id="emi"
+        className="py-16 md:py-24 bg-slate-50"
+      >
 
         <div className="max-w-7xl mx-auto px-4 md:px-6">
 
@@ -285,7 +320,9 @@ export default function Home() {
                 <input
                   type="number"
                   value={loanAmount}
-                  onChange={(e) => setLoanAmount(Number(e.target.value))}
+                  onChange={(e) =>
+                    setLoanAmount(Number(e.target.value))
+                  }
                   className="w-full border rounded-2xl px-5 py-4 mt-2"
                 />
 
@@ -300,7 +337,9 @@ export default function Home() {
                 <input
                   type="number"
                   value={interestRate}
-                  onChange={(e) => setInterestRate(Number(e.target.value))}
+                  onChange={(e) =>
+                    setInterestRate(Number(e.target.value))
+                  }
                   className="w-full border rounded-2xl px-5 py-4 mt-2"
                 />
 
@@ -315,7 +354,9 @@ export default function Home() {
                 <input
                   type="number"
                   value={loanYears}
-                  onChange={(e) => setLoanYears(Number(e.target.value))}
+                  onChange={(e) =>
+                    setLoanYears(Number(e.target.value))
+                  }
                   className="w-full border rounded-2xl px-5 py-4 mt-2"
                 />
 
@@ -349,12 +390,16 @@ export default function Home() {
 
                 <div className="flex justify-between">
                   <span>Effective Rate p.a.</span>
-                  <span>{interestRate.toFixed(2)}%</span>
+                  <span>
+                    {effectiveAnnualRate.toFixed(2)}%
+                  </span>
                 </div>
 
                 <div className="flex justify-between">
                   <span>Effective Rate p.m.</span>
-                  <span>{monthlyRate.toFixed(4)}%</span>
+                  <span>
+                    {(monthlyRate * 100).toFixed(2)}%
+                  </span>
                 </div>
 
               </div>
@@ -367,7 +412,9 @@ export default function Home() {
           <div className="mt-10 text-center">
 
             <button
-              onClick={() => setShowSchedule(!showSchedule)}
+              onClick={() =>
+                setShowSchedule(!showSchedule)
+              }
               className="bg-blue-600 text-white px-8 py-4 rounded-2xl text-lg font-semibold hover:bg-blue-700 transition"
             >
 
@@ -400,11 +447,25 @@ export default function Home() {
 
                     <tr>
 
-                      <th className="p-4 md:p-5 font-bold">Month</th>
-                      <th className="p-4 md:p-5 font-bold">EMI</th>
-                      <th className="p-4 md:p-5 font-bold">Interest</th>
-                      <th className="p-4 md:p-5 font-bold">Principal</th>
-                      <th className="p-4 md:p-5 font-bold">Balance</th>
+                      <th className="p-4 md:p-5 font-bold">
+                        Month
+                      </th>
+
+                      <th className="p-4 md:p-5 font-bold">
+                        EMI
+                      </th>
+
+                      <th className="p-4 md:p-5 font-bold">
+                        Interest
+                      </th>
+
+                      <th className="p-4 md:p-5 font-bold">
+                        Principal
+                      </th>
+
+                      <th className="p-4 md:p-5 font-bold">
+                        Balance
+                      </th>
 
                     </tr>
 
@@ -419,7 +480,9 @@ export default function Home() {
                         className="border-b hover:bg-blue-50 transition"
                       >
 
-                        <td className="p-4 md:p-5">{item.month}</td>
+                        <td className="p-4 md:p-5">
+                          {item.month}
+                        </td>
 
                         <td className="p-4 md:p-5 font-semibold">
                           ₹{item.emi}
@@ -456,7 +519,10 @@ export default function Home() {
       </section>
 
       {/* Contact */}
-      <section id="contact" className="py-16 md:py-24 bg-white">
+      <section
+        id="contact"
+        className="py-16 md:py-24 bg-white"
+      >
 
         <div className="max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
