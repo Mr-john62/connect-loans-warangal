@@ -27,7 +27,6 @@ export default function Home() {
   let emi = 0;
   let totalPayment = 0;
   let totalInterest = 0;
-  let effectiveAnnualRate = 0;
 
   if (
     loanAmount > 0 &&
@@ -48,12 +47,6 @@ export default function Home() {
     totalPayment = emi * months;
 
     totalInterest = totalPayment - loanAmount;
-
-    // Effective Annual Rate
-    effectiveAnnualRate =
-      (
-        Math.pow(1 + monthlyRate, 12) - 1
-      ) * 100;
   }
 
   // Loan Schedule
@@ -389,9 +382,9 @@ export default function Home() {
                 </div>
 
                 <div className="flex justify-between">
-                  <span>Effective Rate p.a.</span>
+                  <span>Interest Rate p.a.</span>
                   <span>
-                    {effectiveAnnualRate.toFixed(2)}%
+                    {interestRate.toFixed(2)}%
                   </span>
                 </div>
 
