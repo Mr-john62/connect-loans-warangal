@@ -4,13 +4,13 @@ import { useState } from "react";
 
 export default function Home() {
 
-  // Loan Inquiry Form
+  // Inquiry Form
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [loanType, setLoanType] = useState("");
   const [loanValue, setLoanValue] = useState("");
 
-  // EMI Calculator States
+  // EMI Calculator
   const [loanAmount, setLoanAmount] = useState(500000);
   const [interestRate, setInterestRate] = useState(16);
   const [loanYears, setLoanYears] = useState(5);
@@ -31,7 +31,7 @@ export default function Home() {
   const totalPayment = emi * months;
   const totalInterest = totalPayment - loanAmount;
 
-  // Amortization Schedule
+  // Loan Schedule
   const schedule = [];
 
   let balance = loanAmount;
@@ -64,23 +64,24 @@ export default function Home() {
 💰 Loan Amount: ₹${loanValue}
 `;
 
-    const whatsappUrl = `https://wa.me/919963703915?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/919704193481?text=${encodeURIComponent(message)}`;
 
     window.open(whatsappUrl, "_blank");
   };
 
   return (
+
     <div className="min-h-screen bg-white text-gray-900">
 
       {/* Navbar */}
       <header className="fixed top-0 left-0 right-0 bg-white shadow z-50">
 
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 flex items-center justify-between">
 
           <img
             src="/logo.png"
             alt="Logo"
-            width={220}
+            width={160}
           />
 
           <nav className="hidden md:flex gap-8 font-semibold">
@@ -93,7 +94,7 @@ export default function Home() {
 
           <a
             href="#contact"
-            className="bg-blue-600 text-white px-6 py-3 rounded-2xl"
+            className="bg-blue-600 text-white px-4 md:px-6 py-3 rounded-2xl text-sm md:text-base"
           >
             Apply Now
           </a>
@@ -102,40 +103,42 @@ export default function Home() {
 
       </header>
 
-      {/* Hero Section */}
-      <section className="pt-40 pb-24 bg-gradient-to-br from-blue-50 to-white">
+      {/* Hero */}
+      <section className="pt-32 pb-16 md:pb-24 bg-gradient-to-br from-blue-50 to-white">
 
-        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-center">
 
-          {/* Left Content */}
+          {/* Left */}
           <div>
 
-            <span className="bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold">
+            <span className="bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-xs md:text-sm font-semibold">
               Trusted Loan Agency In Warangal
             </span>
 
-            <h1 className="text-6xl font-extrabold mt-6 leading-tight">
+            <h1 className="text-4xl md:text-6xl font-extrabold mt-6 leading-tight">
+
               Fast & Easy
               <span className="text-blue-600"> Loan Solutions</span>
+
             </h1>
 
-            <p className="text-gray-600 text-lg mt-6">
+            <p className="text-gray-600 text-base md:text-lg mt-6">
               Connect Loans Warangal helps customers get quick loan approvals
               with minimal documentation and expert financial guidance.
             </p>
 
-            <div className="flex gap-4 mt-8">
+            <div className="flex flex-col sm:flex-row gap-4 mt-8">
 
               <a
                 href="#contact"
-                className="bg-blue-600 text-white px-8 py-4 rounded-2xl"
+                className="bg-blue-600 text-white px-8 py-4 rounded-2xl text-center"
               >
                 Apply For Loan
               </a>
 
               <a
                 href="#contact"
-                className="border px-8 py-4 rounded-2xl"
+                className="border px-8 py-4 rounded-2xl text-center"
               >
                 Contact Us
               </a>
@@ -147,7 +150,7 @@ export default function Home() {
           {/* Inquiry Form */}
           <div>
 
-            <div className="bg-white rounded-3xl shadow-2xl p-8">
+            <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-8">
 
               <h2 className="text-2xl font-bold mb-6">
                 Quick Loan Inquiry
@@ -210,19 +213,19 @@ export default function Home() {
       </section>
 
       {/* Services */}
-      <section id="services" className="py-24 bg-white">
+      <section id="services" className="py-16 md:py-24 bg-white">
 
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
 
           <div className="text-center mb-16">
 
-            <h2 className="text-5xl font-bold">
+            <h2 className="text-3xl md:text-5xl font-bold">
               Loan Services
             </h2>
 
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
 
             {[
               ["💳", "Loan Consolidation"],
@@ -255,20 +258,20 @@ export default function Home() {
 
       </section>
 
-      {/* EMI Calculator */}
-      <section id="emi" className="py-24 bg-slate-50">
+      {/* EMI */}
+      <section id="emi" className="py-16 md:py-24 bg-slate-50">
 
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
 
           <div className="text-center mb-14">
 
-            <h2 className="text-5xl font-bold">
+            <h2 className="text-3xl md:text-5xl font-bold">
               EMI Calculator
             </h2>
 
           </div>
 
-          <div className="bg-white rounded-3xl shadow-2xl p-10 grid lg:grid-cols-2 gap-10">
+          <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
 
             {/* Inputs */}
             <div className="space-y-6">
@@ -321,13 +324,13 @@ export default function Home() {
             </div>
 
             {/* EMI Results */}
-            <div className="bg-blue-600 text-white rounded-3xl p-10">
+            <div className="bg-blue-600 text-white rounded-3xl p-6 md:p-10">
 
-              <h3 className="text-3xl font-bold mb-8">
+              <h3 className="text-2xl md:text-3xl font-bold mb-8">
                 Loan EMI Details
               </h3>
 
-              <div className="space-y-5 text-lg">
+              <div className="space-y-5 text-base md:text-lg">
 
                 <div className="flex justify-between">
                   <span>Monthly EMI</span>
@@ -342,6 +345,16 @@ export default function Home() {
                 <div className="flex justify-between">
                   <span>Total Payment</span>
                   <span>₹{totalPayment.toFixed(0)}</span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span>Effective Rate p.a.</span>
+                  <span>{interestRate.toFixed(2)}%</span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span>Effective Rate p.m.</span>
+                  <span>{monthlyRate.toFixed(4)}%</span>
                 </div>
 
               </div>
@@ -366,20 +379,16 @@ export default function Home() {
 
           </div>
 
-          {/* Schedule Table */}
+          {/* Schedule */}
           {showSchedule && (
 
             <div className="mt-16 bg-white rounded-3xl shadow-2xl overflow-hidden">
 
-              <div className="bg-blue-600 text-white px-8 py-6">
+              <div className="bg-blue-600 text-white px-6 md:px-8 py-6">
 
-                <h2 className="text-3xl font-bold">
+                <h2 className="text-2xl md:text-3xl font-bold">
                   Loan Tenure Schedule
                 </h2>
-
-                <p className="mt-2 text-blue-100">
-                  Month-wise EMI repayment breakdown
-                </p>
 
               </div>
 
@@ -391,11 +400,11 @@ export default function Home() {
 
                     <tr>
 
-                      <th className="p-5 font-bold">Month</th>
-                      <th className="p-5 font-bold">EMI</th>
-                      <th className="p-5 font-bold">Interest</th>
-                      <th className="p-5 font-bold">Principal</th>
-                      <th className="p-5 font-bold">Balance</th>
+                      <th className="p-4 md:p-5 font-bold">Month</th>
+                      <th className="p-4 md:p-5 font-bold">EMI</th>
+                      <th className="p-4 md:p-5 font-bold">Interest</th>
+                      <th className="p-4 md:p-5 font-bold">Principal</th>
+                      <th className="p-4 md:p-5 font-bold">Balance</th>
 
                     </tr>
 
@@ -410,21 +419,21 @@ export default function Home() {
                         className="border-b hover:bg-blue-50 transition"
                       >
 
-                        <td className="p-5">{item.month}</td>
+                        <td className="p-4 md:p-5">{item.month}</td>
 
-                        <td className="p-5 font-semibold">
+                        <td className="p-4 md:p-5 font-semibold">
                           ₹{item.emi}
                         </td>
 
-                        <td className="p-5 text-red-500">
+                        <td className="p-4 md:p-5 text-red-500">
                           ₹{item.interest}
                         </td>
 
-                        <td className="p-5 text-green-600">
+                        <td className="p-4 md:p-5 text-green-600">
                           ₹{item.principal}
                         </td>
 
-                        <td className="p-5">
+                        <td className="p-4 md:p-5">
                           ₹{item.balance}
                         </td>
 
@@ -447,26 +456,26 @@ export default function Home() {
       </section>
 
       {/* Contact */}
-      <section id="contact" className="py-24 bg-white">
+      <section id="contact" className="py-16 md:py-24 bg-white">
 
-        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
           <div>
 
-            <h2 className="text-5xl font-bold mb-6">
+            <h2 className="text-3xl md:text-5xl font-bold mb-6">
               Contact Connect Loans Warangal
             </h2>
 
-            <div className="space-y-5 text-lg">
+            <div className="space-y-5 text-base md:text-lg">
 
               <p>📍 Warangal, Telangana</p>
 
-              <p>📞 +91 9963703915</p>
+              <p>📞 +91 9704193481</p>
 
-              <p>✉️ praveenrc07@gmail.com</p>
+              <p>✉️ connectloanswgl@gmail.com</p>
 
               <a
-                href="https://wa.me/919963703915"
+                href="https://wa.me/919704193481"
                 target="_blank"
                 className="inline-block bg-green-500 text-white px-8 py-4 rounded-2xl"
               >
@@ -477,7 +486,7 @@ export default function Home() {
 
           </div>
 
-          {/* Google Map */}
+          {/* Map */}
           <div className="rounded-3xl overflow-hidden shadow-2xl">
 
             <iframe
@@ -497,7 +506,7 @@ export default function Home() {
 
       {/* Floating WhatsApp */}
       <a
-        href="https://wa.me/919963703915"
+        href="https://wa.me/919704193481"
         target="_blank"
         className="fixed bottom-6 right-6 bg-green-500 text-white px-5 py-4 rounded-full shadow-2xl"
       >
