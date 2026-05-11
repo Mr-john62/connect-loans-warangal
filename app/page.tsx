@@ -4,18 +4,18 @@ import { useState } from "react";
 
 export default function Home() {
 
-  // Loan Form States
+  // Inquiry Form
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [loanType, setLoanType] = useState("");
   const [loanValue, setLoanValue] = useState("");
 
-  // EMI States
+  // EMI Calculator
   const [loanAmount, setLoanAmount] = useState(500000);
-  const [interestRate, setInterestRate] = useState(10);
+  const [interestRate, setInterestRate] = useState(16);
   const [loanYears, setLoanYears] = useState(5);
 
-  // EMI Calculation
+  // EMI Formula
   const monthlyRate = interestRate / 12 / 100;
   const months = loanYears * 12;
 
@@ -27,6 +27,27 @@ export default function Home() {
 
   const totalPayment = emi * months;
   const totalInterest = totalPayment - loanAmount;
+
+  // Amortization Schedule
+  const schedule = [];
+
+  let balance = loanAmount;
+
+  for (let i = 1; i <= months; i++) {
+
+    const interest = balance * monthlyRate;
+    const principal = emi - interest;
+
+    balance -= principal;
+
+    schedule.push({
+      month: i,
+      emi: emi.toFixed(0),
+      interest: interest.toFixed(0),
+      principal: principal.toFixed(0),
+      balance: balance > 0 ? balance.toFixed(0) : "0",
+    });
+  }
 
   // WhatsApp Submit
   const handleWhatsAppSubmit = () => {
@@ -49,40 +70,27 @@ export default function Home() {
     <div className="min-h-screen bg-white text-gray-900">
 
       {/* Navbar */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-gray-200">
+      <header className="fixed top-0 left-0 right-0 bg-white shadow z-50">
 
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
-          {/* Logo */}
-          <div className="flex items-center">
-            <img
-              src="/logo.png"
-              alt="Connect Warangal Logo"
-              width={220}
-            />
-          </div>
+          <img
+            src="/logo.png"
+            alt="Logo"
+            width={220}
+          />
 
-          {/* Navigation */}
-          <nav className="hidden md:flex gap-8 text-sm font-semibold">
+          <nav className="hidden md:flex gap-8 font-semibold">
 
-            <a href="#services" className="hover:text-blue-600 transition">
-              Services
-            </a>
-
-            <a href="#emi" className="hover:text-blue-600 transition">
-              EMI Calculator
-            </a>
-
-            <a href="#contact" className="hover:text-blue-600 transition">
-              Contact
-            </a>
+            <a href="#services">Services</a>
+            <a href="#emi">EMI Calculator</a>
+            <a href="#contact">Contact</a>
 
           </nav>
 
-          {/* Apply Button */}
           <a
             href="#contact"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-2xl shadow-lg transition inline-block"
+            className="bg-blue-600 text-white px-6 py-3 rounded-2xl"
           >
             Apply Now
           </a>
@@ -91,40 +99,40 @@ export default function Home() {
 
       </header>
 
-      {/* Hero Section */}
-      <section className="pt-40 pb-24 bg-gradient-to-br from-blue-50 via-white to-slate-100">
+      {/* Hero */}
+      <section className="pt-40 pb-24 bg-gradient-to-br from-blue-50 to-white">
 
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
 
-          {/* Left Content */}
+          {/* Left */}
           <div>
 
-            <span className="inline-block bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+            <span className="bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold">
               Trusted Loan Agency In Warangal
             </span>
 
-            <h1 className="text-5xl md:text-6xl font-extrabold leading-tight mb-6">
+            <h1 className="text-6xl font-extrabold mt-6 leading-tight">
               Fast & Easy
               <span className="text-blue-600"> Loan Solutions</span>
             </h1>
 
-            <p className="text-lg text-gray-600 leading-relaxed mb-8">
-              Connect Warangal helps customers get quick loan approvals
+            <p className="text-gray-600 text-lg mt-6">
+              Connect Loans Warangal helps customers get quick loan approvals
               with minimal documentation and expert financial guidance.
             </p>
 
-            <div className="flex flex-wrap gap-4">
+            <div className="flex gap-4 mt-8">
 
               <a
                 href="#contact"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl shadow-xl transition inline-block"
+                className="bg-blue-600 text-white px-8 py-4 rounded-2xl"
               >
                 Apply For Loan
               </a>
 
               <a
                 href="#contact"
-                className="border border-gray-300 hover:border-blue-600 hover:text-blue-600 px-8 py-4 rounded-2xl transition inline-block"
+                className="border px-8 py-4 rounded-2xl"
               >
                 Contact Us
               </a>
@@ -133,14 +141,14 @@ export default function Home() {
 
           </div>
 
-          {/* Loan Form */}
+          {/* Form */}
           <div>
 
-            <div className="bg-white rounded-[32px] shadow-2xl p-8 border border-gray-100">
+            <div className="bg-white rounded-3xl shadow-2xl p-8">
 
-              <h3 className="text-2xl font-bold mb-6">
+              <h2 className="text-2xl font-bold mb-6">
                 Quick Loan Inquiry
-              </h3>
+              </h2>
 
               <div className="space-y-5">
 
@@ -149,7 +157,7 @@ export default function Home() {
                   placeholder="Full Name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full border border-gray-200 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border rounded-2xl px-5 py-4"
                 />
 
                 <input
@@ -157,22 +165,20 @@ export default function Home() {
                   placeholder="Phone Number"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full border border-gray-200 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border rounded-2xl px-5 py-4"
                 />
 
                 <select
                   value={loanType}
                   onChange={(e) => setLoanType(e.target.value)}
-                  className="w-full border border-gray-200 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border rounded-2xl px-5 py-4"
                 >
-
                   <option value="">Select Loan Type</option>
                   <option>Loan Consolidation</option>
                   <option>Personal Loan</option>
                   <option>Business Loan</option>
                   <option>Home Loan</option>
                   <option>Mortgage Loan</option>
-
                 </select>
 
                 <input
@@ -180,13 +186,12 @@ export default function Home() {
                   placeholder="Loan Amount"
                   value={loanValue}
                   onChange={(e) => setLoanValue(e.target.value)}
-                  className="w-full border border-gray-200 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border rounded-2xl px-5 py-4"
                 />
 
-                {/* Submit */}
                 <button
                   onClick={handleWhatsAppSubmit}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl text-lg font-semibold shadow-lg transition"
+                  className="w-full bg-blue-600 text-white py-4 rounded-2xl"
                 >
                   Submit Application
                 </button>
@@ -208,47 +213,38 @@ export default function Home() {
 
           <div className="text-center mb-16">
 
-            <h2 className="text-4xl font-bold mb-4">
+            <h2 className="text-5xl font-bold">
               Loan Services
             </h2>
-
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              Flexible financing solutions for individuals and businesses.
-            </p>
 
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
 
-            <div className="bg-slate-50 hover:bg-blue-600 hover:text-white transition-all duration-300 rounded-3xl p-8 shadow-sm hover:shadow-2xl">
-              <div className="text-4xl mb-6">💳</div>
-              <h3 className="text-2xl font-bold mb-4">Loan Consolidation</h3>
-              <p>Combine multiple loans into one easy repayment.</p>
-            </div>
+            {[
+              ["💳", "Loan Consolidation"],
+              ["💰", "Personal Loan"],
+              ["🏢", "Business Loan"],
+              ["🏠", "Home Loan"],
+              ["📑", "Mortgage Loan"],
+            ].map((item, index) => (
 
-            <div className="bg-slate-50 hover:bg-blue-600 hover:text-white transition-all duration-300 rounded-3xl p-8 shadow-sm hover:shadow-2xl">
-              <div className="text-4xl mb-6">💰</div>
-              <h3 className="text-2xl font-bold mb-4">Personal Loan</h3>
-              <p>Quick personal financing with fast approvals.</p>
-            </div>
+              <div
+                key={index}
+                className="bg-slate-50 rounded-3xl p-8 hover:bg-blue-600 hover:text-white transition"
+              >
 
-            <div className="bg-slate-50 hover:bg-blue-600 hover:text-white transition-all duration-300 rounded-3xl p-8 shadow-sm hover:shadow-2xl">
-              <div className="text-4xl mb-6">🏢</div>
-              <h3 className="text-2xl font-bold mb-4">Business Loan</h3>
-              <p>Flexible funding solutions for business growth.</p>
-            </div>
+                <div className="text-5xl mb-6">
+                  {item[0]}
+                </div>
 
-            <div className="bg-slate-50 hover:bg-blue-600 hover:text-white transition-all duration-300 rounded-3xl p-8 shadow-sm hover:shadow-2xl">
-              <div className="text-4xl mb-6">🏠</div>
-              <h3 className="text-2xl font-bold mb-4">Home Loan</h3>
-              <p>Affordable home financing solutions.</p>
-            </div>
+                <h3 className="text-2xl font-bold">
+                  {item[1]}
+                </h3>
 
-            <div className="bg-slate-50 hover:bg-blue-600 hover:text-white transition-all duration-300 rounded-3xl p-8 shadow-sm hover:shadow-2xl">
-              <div className="text-4xl mb-6">📑</div>
-              <h3 className="text-2xl font-bold mb-4">Mortgage Loan</h3>
-              <p>Secure mortgage loans with easy processing.</p>
-            </div>
+              </div>
+
+            ))}
 
           </div>
 
@@ -259,27 +255,24 @@ export default function Home() {
       {/* EMI Calculator */}
       <section id="emi" className="py-24 bg-slate-50">
 
-        <div className="max-w-5xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-6">
 
           <div className="text-center mb-14">
 
-            <h2 className="text-5xl font-bold mb-4">
+            <h2 className="text-5xl font-bold">
               EMI Calculator
             </h2>
 
-            <p className="text-gray-600 text-lg">
-              Calculate your monthly loan EMI instantly.
-            </p>
-
           </div>
 
-          <div className="bg-white rounded-[32px] shadow-2xl p-10 border border-gray-100 grid md:grid-cols-2 gap-10">
+          <div className="bg-white rounded-3xl shadow-2xl p-10 grid lg:grid-cols-2 gap-10">
 
             {/* Inputs */}
             <div className="space-y-6">
 
               <div>
-                <label className="block text-sm font-semibold mb-2">
+
+                <label className="font-semibold">
                   Loan Amount (₹)
                 </label>
 
@@ -287,12 +280,14 @@ export default function Home() {
                   type="number"
                   value={loanAmount}
                   onChange={(e) => setLoanAmount(Number(e.target.value))}
-                  className="w-full border border-gray-200 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border rounded-2xl px-5 py-4 mt-2"
                 />
+
               </div>
 
               <div>
-                <label className="block text-sm font-semibold mb-2">
+
+                <label className="font-semibold">
                   Interest Rate (%)
                 </label>
 
@@ -300,12 +295,14 @@ export default function Home() {
                   type="number"
                   value={interestRate}
                   onChange={(e) => setInterestRate(Number(e.target.value))}
-                  className="w-full border border-gray-200 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border rounded-2xl px-5 py-4 mt-2"
                 />
+
               </div>
 
               <div>
-                <label className="block text-sm font-semibold mb-2">
+
+                <label className="font-semibold">
                   Loan Tenure (Years)
                 </label>
 
@@ -313,35 +310,33 @@ export default function Home() {
                   type="number"
                   value={loanYears}
                   onChange={(e) => setLoanYears(Number(e.target.value))}
-                  className="w-full border border-gray-200 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border rounded-2xl px-5 py-4 mt-2"
                 />
+
               </div>
 
             </div>
 
-            {/* Results */}
-            <div className="bg-blue-600 text-white rounded-[32px] p-10 flex flex-col justify-center">
+            {/* EMI Result */}
+            <div className="bg-blue-600 text-white rounded-3xl p-10">
 
-              <div className="mb-8">
+              <h3 className="text-3xl font-bold mb-8">
+                Loan EMI Details
+              </h3>
 
-                <p className="text-lg opacity-80 mb-2">
-                  Monthly EMI
-                </p>
+              <div className="space-y-5 text-lg">
 
-                <h3 className="text-5xl font-bold">
-                  ₹{emi.toFixed(0)}
-                </h3>
+                <div className="flex justify-between">
+                  <span>Monthly EMI</span>
+                  <span>₹{emi.toFixed(0)}</span>
+                </div>
 
-              </div>
-
-              <div className="space-y-5">
-
-                <div className="flex justify-between text-lg">
+                <div className="flex justify-between">
                   <span>Total Interest</span>
                   <span>₹{totalInterest.toFixed(0)}</span>
                 </div>
 
-                <div className="flex justify-between text-lg">
+                <div className="flex justify-between">
                   <span>Total Payment</span>
                   <span>₹{totalPayment.toFixed(0)}</span>
                 </div>
@@ -352,25 +347,92 @@ export default function Home() {
 
           </div>
 
+          {/* Amortization Schedule */}
+          <div className="mt-16 bg-white rounded-3xl shadow-2xl overflow-hidden">
+
+            <div className="bg-blue-600 text-white px-8 py-6">
+
+              <h2 className="text-3xl font-bold">
+                Loan Tenure Schedule
+              </h2>
+
+              <p className="mt-2 text-blue-100">
+                Month-wise EMI repayment breakdown
+              </p>
+
+            </div>
+
+            <div className="overflow-x-auto">
+
+              <table className="w-full min-w-[900px] text-left">
+
+                <thead className="bg-slate-100">
+
+                  <tr>
+
+                    <th className="p-5 font-bold">Month</th>
+                    <th className="p-5 font-bold">EMI</th>
+                    <th className="p-5 font-bold">Interest</th>
+                    <th className="p-5 font-bold">Principal</th>
+                    <th className="p-5 font-bold">Balance</th>
+
+                  </tr>
+
+                </thead>
+
+                <tbody>
+
+                  {schedule.map((item, index) => (
+
+                    <tr
+                      key={index}
+                      className="border-b hover:bg-blue-50 transition"
+                    >
+
+                      <td className="p-5">{item.month}</td>
+
+                      <td className="p-5 font-semibold">
+                        ₹{item.emi}
+                      </td>
+
+                      <td className="p-5 text-red-500">
+                        ₹{item.interest}
+                      </td>
+
+                      <td className="p-5 text-green-600">
+                        ₹{item.principal}
+                      </td>
+
+                      <td className="p-5">
+                        ₹{item.balance}
+                      </td>
+
+                    </tr>
+
+                  ))}
+
+                </tbody>
+
+              </table>
+
+            </div>
+
+          </div>
+
         </div>
 
       </section>
 
-      {/* Contact + Google Maps */}
+      {/* Contact */}
       <section id="contact" className="py-24 bg-white">
 
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
 
-          {/* Left */}
           <div>
 
             <h2 className="text-5xl font-bold mb-6">
-              Contact Connect Warangal
+              Contact Connect Loans Warangal
             </h2>
-
-            <p className="text-gray-600 text-lg mb-10">
-              Visit our office or contact us directly for fast loan approvals.
-            </p>
 
             <div className="space-y-5 text-lg">
 
@@ -383,7 +445,7 @@ export default function Home() {
               <a
                 href="https://wa.me/919963703915"
                 target="_blank"
-                className="inline-block bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-2xl shadow-lg transition"
+                className="inline-block bg-green-500 text-white px-8 py-4 rounded-2xl"
               >
                 Chat On WhatsApp
               </a>
@@ -392,8 +454,8 @@ export default function Home() {
 
           </div>
 
-          {/* Google Map */}
-          <div className="rounded-[32px] overflow-hidden shadow-2xl border border-gray-200">
+          {/* Map */}
+          <div className="rounded-3xl overflow-hidden shadow-2xl">
 
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3794.6371680251336!2d79.5475080751791!3d17.99560998299898!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTfCsDU5JzQ0LjIiTiA3OcKwMzMnMDAuMyJF!5e0!3m2!1sen!2sin!4v1778439603286!5m2!1sen!2sin"
@@ -402,7 +464,6 @@ export default function Home() {
               style={{ border: 0 }}
               allowFullScreen
               loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
             ></iframe>
 
           </div>
@@ -411,11 +472,11 @@ export default function Home() {
 
       </section>
 
-      {/* WhatsApp Floating Button */}
+      {/* Floating WhatsApp */}
       <a
         href="https://wa.me/919963703915"
         target="_blank"
-        className="fixed bottom-6 right-6 z-50 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-2xl transition duration-300"
+        className="fixed bottom-6 right-6 bg-green-500 text-white px-5 py-4 rounded-full shadow-2xl"
       >
         WhatsApp
       </a>
