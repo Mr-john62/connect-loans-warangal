@@ -2,19 +2,29 @@
 
 import { useState } from "react";
 
+import { db } from "@/lib/firebase";
+
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+
 export default function Home() {
 
   // =========================================
-  // INQUIRY FORM
+  // FORM STATES
   // =========================================
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [loanType, setLoanType] = useState("");
-  const [loanValue, setLoanValue] = useState("");
+  const [loanType, setLoanType] =
+    useState("");
+  const [loanValue, setLoanValue] =
+    useState("");
 
   // =========================================
-  // EMI CALCULATOR
+  // EMI CALCULATOR STATES
   // =========================================
 
   const [loanAmount, setLoanAmount] =
@@ -25,10 +35,6 @@ export default function Home() {
 
   const [loanYears, setLoanYears] =
     useState(5);
-
-  // =========================================
-  // SCHEDULE TOGGLE
-  // =========================================
 
   const [showSchedule, setShowSchedule] =
     useState(false);
@@ -78,16 +84,6 @@ export default function Home() {
   }
 
   // =========================================
-  // APP STYLE EFFECTIVE RATES
-  // =========================================
-
-  const effectiveAnnualRate =
-    interestRate / 1.74;
-
-  const effectiveMonthlyRate =
-    effectiveAnnualRate / 12;
-
-  // =========================================
   // LOAN SCHEDULE
   // =========================================
 
@@ -110,6 +106,7 @@ export default function Home() {
     balance -= principal;
 
     schedule.push({
+
       month: i,
 
       emi: emi.toFixed(2),
@@ -124,34 +121,54 @@ export default function Home() {
         balance > 0
           ? balance.toFixed(2)
           : "0",
+
     });
   }
 
   // =========================================
-  // WHATSAPP SUBMIT
+  // FIREBASE SAVE
   // =========================================
 
-  const handleWhatsAppSubmit = () => {
+  const handleSubmit =
+    async () => {
 
-    const message = `
-*New Loan Inquiry*
+    try {
 
-👤 Name: ${name}
+      await addDoc(
+        collection(
+          db,
+          "loanInquiries"
+        ),
+        {
 
-📞 Phone: ${phone}
+          name,
+          phone,
+          loanType,
+          loanAmount: loanValue,
 
-🏦 Loan Type: ${loanType}
+          createdAt:
+            serverTimestamp(),
 
-💰 Loan Amount: ₹${loanValue}
-`;
+        }
+      );
 
-    const whatsappUrl =
-      `https://wa.me/919704193481?text=${encodeURIComponent(message)}`;
+      alert(
+        "✅ Your loan inquiry has been submitted successfully. Our team will contact you shortly."
+      );
 
-    window.open(
-      whatsappUrl,
-      "_blank"
-    );
+      setName("");
+      setPhone("");
+      setLoanType("");
+      setLoanValue("");
+
+    } catch (error) {
+
+      console.log(error);
+
+      alert(
+        "Something went wrong!"
+      );
+    }
   };
 
   return (
@@ -192,7 +209,9 @@ export default function Home() {
             href="#contact"
             className="bg-blue-600 text-white px-4 md:px-6 py-3 rounded-2xl text-sm md:text-base"
           >
+
             Apply Now
+
           </a>
 
         </div>
@@ -338,9 +357,7 @@ export default function Home() {
                 />
 
                 <button
-                  onClick={
-                    handleWhatsAppSubmit
-                  }
+                  onClick={handleSubmit}
                   className="w-full bg-blue-600 text-white py-4 rounded-2xl"
                 >
 
@@ -349,6 +366,105 @@ export default function Home() {
                 </button>
 
               </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* ========================================= */}
+      {/* SERVICES */}
+      {/* ========================================= */}
+
+      <section
+        id="services"
+        className="py-16 md:py-24 bg-white"
+      >
+
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+
+          <div className="text-center mb-16">
+
+            <h2 className="text-3xl md:text-5xl font-bold">
+
+              Our Loan Services
+
+            </h2>
+
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+
+            <div className="bg-blue-50 rounded-3xl p-8 shadow text-center">
+
+              <div className="text-6xl mb-5">
+                🔄
+              </div>
+
+              <h3 className="text-2xl font-bold">
+
+                Loan Consolidation
+
+              </h3>
+
+            </div>
+
+            <div className="bg-blue-50 rounded-3xl p-8 shadow text-center">
+
+              <div className="text-6xl mb-5">
+                💳
+              </div>
+
+              <h3 className="text-2xl font-bold">
+
+                Personal Loan
+
+              </h3>
+
+            </div>
+
+            <div className="bg-blue-50 rounded-3xl p-8 shadow text-center">
+
+              <div className="text-6xl mb-5">
+                🏢
+              </div>
+
+              <h3 className="text-2xl font-bold">
+
+                Business Loan
+
+              </h3>
+
+            </div>
+
+            <div className="bg-blue-50 rounded-3xl p-8 shadow text-center">
+
+              <div className="text-6xl mb-5">
+                🏠
+              </div>
+
+              <h3 className="text-2xl font-bold">
+
+                Home Loan
+
+              </h3>
+
+            </div>
+
+            <div className="bg-blue-50 rounded-3xl p-8 shadow text-center">
+
+              <div className="text-6xl mb-5">
+                📑
+              </div>
+
+              <h3 className="text-2xl font-bold">
+
+                Mortgage Loan
+
+              </h3>
 
             </div>
 
@@ -504,30 +620,6 @@ export default function Home() {
 
                 </div>
 
-                <div className="flex justify-between">
-
-                  <span>
-                    Effective Rate p.a.
-                  </span>
-
-                  <span>
-                    {effectiveAnnualRate.toFixed(2)}%
-                  </span>
-
-                </div>
-
-                <div className="flex justify-between">
-
-                  <span>
-                    Effective Rate p.m.
-                  </span>
-
-                  <span>
-                    {effectiveMonthlyRate.toFixed(2)}%
-                  </span>
-
-                </div>
-
               </div>
 
             </div>
@@ -555,45 +647,37 @@ export default function Home() {
 
           </div>
 
-          {/* SCHEDULE */}
+          {/* SCHEDULE TABLE */}
 
           {showSchedule && (
 
-            <div className="mt-16 bg-white rounded-3xl shadow-2xl overflow-hidden">
-
-              <div className="bg-blue-600 text-white px-6 md:px-8 py-6">
-
-                <h2 className="text-2xl md:text-3xl font-bold">
-                  Loan Tenure Schedule
-                </h2>
-
-              </div>
+            <div className="mt-12 bg-white rounded-3xl shadow overflow-hidden">
 
               <div className="overflow-x-auto max-h-[500px] overflow-y-auto">
 
-                <table className="w-full min-w-[900px] text-left">
+                <table className="w-full min-w-[900px]">
 
-                  <thead className="bg-slate-100 sticky top-0">
+                  <thead className="bg-blue-600 text-white sticky top-0">
 
                     <tr>
 
-                      <th className="p-4 md:p-5 font-bold">
+                      <th className="p-4 text-left">
                         Month
                       </th>
 
-                      <th className="p-4 md:p-5 font-bold">
+                      <th className="p-4 text-left">
                         EMI
                       </th>
 
-                      <th className="p-4 md:p-5 font-bold">
+                      <th className="p-4 text-left">
                         Interest
                       </th>
 
-                      <th className="p-4 md:p-5 font-bold">
+                      <th className="p-4 text-left">
                         Principal
                       </th>
 
-                      <th className="p-4 md:p-5 font-bold">
+                      <th className="p-4 text-left">
                         Balance
                       </th>
 
@@ -603,36 +687,40 @@ export default function Home() {
 
                   <tbody>
 
-                    {schedule.map((item, index) => (
+                    {schedule.map(
+                      (
+                        item,
+                        index
+                      ) => (
 
-                      <tr
-                        key={index}
-                        className="border-b hover:bg-blue-50 transition"
-                      >
+                        <tr
+                          key={index}
+                          className="border-b"
+                        >
 
-                        <td className="p-4 md:p-5">
-                          {item.month}
-                        </td>
+                          <td className="p-4">
+                            {item.month}
+                          </td>
 
-                        <td className="p-4 md:p-5 font-semibold">
-                          ₹{item.emi}
-                        </td>
+                          <td className="p-4">
+                            ₹{item.emi}
+                          </td>
 
-                        <td className="p-4 md:p-5 text-red-500">
-                          ₹{item.interest}
-                        </td>
+                          <td className="p-4 text-red-500">
+                            ₹{item.interest}
+                          </td>
 
-                        <td className="p-4 md:p-5 text-green-600">
-                          ₹{item.principal}
-                        </td>
+                          <td className="p-4 text-green-600">
+                            ₹{item.principal}
+                          </td>
 
-                        <td className="p-4 md:p-5">
-                          ₹{item.balance}
-                        </td>
+                          <td className="p-4">
+                            ₹{item.balance}
+                          </td>
 
-                      </tr>
-
-                    ))}
+                        </tr>
+                      )
+                    )}
 
                   </tbody>
 
@@ -713,6 +801,22 @@ export default function Home() {
         </div>
 
       </section>
+
+      {/* FLOATING WHATSAPP */}
+
+      <a
+        href="https://wa.me/919704193481"
+        target="_blank"
+        className="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white w-16 h-16 rounded-full shadow-2xl z-50 flex items-center justify-center"
+      >
+
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/733/733585.png"
+          alt="WhatsApp"
+          className="w-8 h-8"
+        />
+
+      </a>
 
     </div>
   );
