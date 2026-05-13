@@ -16,6 +16,8 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
+import * as XLSX from "xlsx";
+
 export default function AdminPage() {
 
   const router = useRouter();
@@ -144,6 +146,91 @@ export default function AdminPage() {
       );
     };
 
+  // =========================================
+  // AI LEAD SCORE
+  // =========================================
+
+  const getLeadScore =
+    (amount: number) => {
+
+      if (amount >= 500000) {
+
+        return {
+          label: "🟢 High",
+          color:
+            "text-green-600",
+        };
+      }
+
+      if (amount >= 200000) {
+
+        return {
+          label: "🟡 Medium",
+          color:
+            "text-yellow-500",
+        };
+      }
+
+      return {
+        label: "🔴 Low",
+        color:
+          "text-red-500",
+      };
+    };
+
+  // =========================================
+  // EXPORT EXCEL
+  // =========================================
+
+  const exportToExcel = () => {
+
+    const exportData =
+      leads.map((lead) => ({
+
+        Name:
+          lead.name,
+
+        Phone:
+          lead.phone,
+
+        LoanType:
+          lead.loanType,
+
+        Amount:
+          lead.loanAmount,
+
+        Status:
+          lead.status || "New",
+
+        AIScore:
+          getLeadScore(
+            Number(
+              lead.loanAmount
+            )
+          ).label,
+
+      }));
+
+    const worksheet =
+      XLSX.utils.json_to_sheet(
+        exportData
+      );
+
+    const workbook =
+      XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(
+      workbook,
+      worksheet,
+      "Leads"
+    );
+
+    XLSX.writeFile(
+      workbook,
+      "Connect-Loans-Leads.xlsx"
+    );
+  };
+
   return (
 
     <div className="min-h-screen bg-slate-100 p-6 md:p-10">
@@ -202,6 +289,15 @@ export default function AdminPage() {
           </button>
 
           <button
+            onClick={exportToExcel}
+            className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-2xl font-semibold"
+          >
+
+            Export Excel
+
+          </button>
+
+          <button
             onClick={handleLogout}
             className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-2xl font-semibold"
           >
@@ -238,7 +334,7 @@ export default function AdminPage() {
 
         <div className="overflow-x-auto">
 
-          <table className="w-full min-w-[1200px]">
+          <table className="w-full min-w-[1400px]">
 
             <thead className="bg-blue-600 text-white">
 
@@ -261,6 +357,10 @@ export default function AdminPage() {
                 </th>
 
                 <th className="p-5 text-left">
+                  AI Score
+                </th>
+
+                <th className="p-5 text-left">
                   Status
                 </th>
 
@@ -275,100 +375,118 @@ export default function AdminPage() {
             <tbody>
 
               {filteredLeads.map(
-                (lead) => (
+                (lead) => {
 
-                  <tr
-                    key={lead.id}
-                    className="border-b hover:bg-slate-50 transition"
-                  >
+                  const score =
+                    getLeadScore(
+                      Number(
+                        lead.loanAmount
+                      )
+                    );
 
-                    {/* NAME */}
+                  return (
 
-                    <td className="p-5 font-semibold">
+                    <tr
+                      key={lead.id}
+                      className="border-b hover:bg-slate-50 transition"
+                    >
 
-                      {lead.name}
+                      {/* NAME */}
 
-                    </td>
+                      <td className="p-5 font-semibold">
 
-                    {/* PHONE */}
+                        {lead.name}
 
-                    <td className="p-5">
+                      </td>
 
-                      {lead.phone}
+                      {/* PHONE */}
 
-                    </td>
+                      <td className="p-5">
 
-                    {/* LOAN TYPE */}
+                        {lead.phone}
 
-                    <td className="p-5">
+                      </td>
 
-                      {lead.loanType}
+                      {/* LOAN TYPE */}
 
-                    </td>
+                      <td className="p-5">
 
-                    {/* AMOUNT */}
+                        {lead.loanType}
 
-                    <td className="p-5 text-green-600 font-semibold">
+                      </td>
 
-                      ₹{lead.loanAmount}
+                      {/* AMOUNT */}
 
-                    </td>
+                      <td className="p-5 text-green-600 font-semibold">
 
-                    {/* STATUS */}
+                        ₹{lead.loanAmount}
 
-                    <td className="p-5">
+                      </td>
 
-                      <select
-                        value={
-                          lead.status || "New"
-                        }
-                        onChange={(e) =>
-                          updateStatus(
-                            lead.id,
-                            e.target.value
-                          )
-                        }
-                        className="border rounded-xl px-3 py-2"
-                      >
+                      {/* AI SCORE */}
 
-                        <option>
-                          New
-                        </option>
+                      <td className={`p-5 font-bold ${score.color}`}>
 
-                        <option>
-                          Contacted
-                        </option>
+                        {score.label}
 
-                        <option>
-                          Approved
-                        </option>
+                      </td>
 
-                        <option>
-                          Rejected
-                        </option>
+                      {/* STATUS */}
 
-                      </select>
+                      <td className="p-5">
 
-                    </td>
+                        <select
+                          value={
+                            lead.status || "New"
+                          }
+                          onChange={(e) =>
+                            updateStatus(
+                              lead.id,
+                              e.target.value
+                            )
+                          }
+                          className="border rounded-xl px-3 py-2"
+                        >
 
-                    {/* WHATSAPP */}
+                          <option>
+                            New
+                          </option>
 
-                    <td className="p-5">
+                          <option>
+                            Contacted
+                          </option>
 
-                      <a
-                        href={`https://wa.me/91${lead.phone}`}
-                        target="_blank"
-                        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl"
-                      >
+                          <option>
+                            Approved
+                          </option>
 
-                        WhatsApp
+                          <option>
+                            Rejected
+                          </option>
 
-                      </a>
+                        </select>
 
-                    </td>
+                      </td>
 
-                  </tr>
-                )
+                      {/* WHATSAPP */}
+
+                      <td className="p-5">
+
+                        <a
+                          href={`https://wa.me/91${lead.phone}`}
+                          target="_blank"
+                          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl"
+                        >
+
+                          WhatsApp
+
+                        </a>
+
+                      </td>
+
+                    </tr>
+                  );
+                }
               )}
 
             </tbody>
