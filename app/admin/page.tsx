@@ -28,9 +28,9 @@ export default function AdminPage() {
   useEffect(() => {
 
     const isLoggedIn =
-      localStorage.getItem(
-        "adminLoggedIn"
-      );
+      sessionStorage.getItem(
+  "adminLoggedIn"
+)
 
     if (!isLoggedIn) {
 
@@ -74,10 +74,9 @@ export default function AdminPage() {
 
   const handleLogout = () => {
 
-    localStorage.removeItem(
-      "adminLoggedIn"
-    );
-
+sessionStorage.removeItem(
+  "adminLoggedIn"
+);
     router.push("/login");
   };
 

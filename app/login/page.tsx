@@ -35,11 +35,10 @@ export default function LoginPage() {
       password === savedPassword
     ) {
 
-      localStorage.setItem(
-        "adminLoggedIn",
-        "true"
-      );
-
+      sessionStorage.setItem(
+  "adminLoggedIn",
+  "true"
+);
       router.push("/admin");
 
     } else {
