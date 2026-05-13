@@ -12,6 +12,8 @@ import { db } from "@/lib/firebase";
 import {
   collection,
   getDocs,
+  doc,
+  updateDoc,
 } from "firebase/firestore";
 
 export default function AdminPage() {
@@ -21,6 +23,9 @@ export default function AdminPage() {
   const [leads, setLeads] =
     useState<any[]>([]);
 
+  const [search, setSearch] =
+    useState("");
+
   // =========================================
   // LOGIN CHECK
   // =========================================
@@ -29,8 +34,8 @@ export default function AdminPage() {
 
     const isLoggedIn =
       sessionStorage.getItem(
-  "adminLoggedIn"
-)
+        "adminLoggedIn"
+      );
 
     if (!isLoggedIn) {
 
@@ -74,11 +79,70 @@ export default function AdminPage() {
 
   const handleLogout = () => {
 
-sessionStorage.removeItem(
-  "adminLoggedIn"
-);
+    sessionStorage.removeItem(
+      "adminLoggedIn"
+    );
+
     router.push("/login");
   };
+
+  // =========================================
+  // SEARCH FILTER
+  // =========================================
+
+  const filteredLeads =
+    leads.filter((lead) =>
+
+      lead.name
+        ?.toLowerCase()
+        .includes(
+          search.toLowerCase()
+        ) ||
+
+      lead.phone
+        ?.includes(search)
+
+    );
+
+  // =========================================
+  // UPDATE STATUS
+  // =========================================
+
+  const updateStatus =
+    async (
+      id: string,
+      status: string
+    ) => {
+
+      const leadRef =
+        doc(
+          db,
+          "loanInquiries",
+          id
+        );
+
+      await updateDoc(
+        leadRef,
+        {
+          status,
+        }
+      );
+
+      setLeads((prev) =>
+
+        prev.map((lead) =>
+
+          lead.id === id
+
+            ? {
+                ...lead,
+                status,
+              }
+
+            : lead
+        )
+      );
+    };
 
   return (
 
@@ -118,7 +182,7 @@ sessionStorage.removeItem(
 
         {/* RIGHT */}
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 flex-wrap">
 
           <div className="bg-blue-600 text-white px-6 py-3 rounded-2xl font-semibold">
 
@@ -150,13 +214,31 @@ sessionStorage.removeItem(
 
       </div>
 
+      {/* SEARCH */}
+
+      <div className="mb-6">
+
+        <input
+          type="text"
+          placeholder="Search by name or phone"
+          value={search}
+          onChange={(e) =>
+            setSearch(
+              e.target.value
+            )
+          }
+          className="w-full md:w-96 border rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+      </div>
+
       {/* TABLE */}
 
       <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
 
         <div className="overflow-x-auto">
 
-          <table className="w-full min-w-[900px]">
+          <table className="w-full min-w-[1200px]">
 
             <thead className="bg-blue-600 text-white">
 
@@ -178,13 +260,21 @@ sessionStorage.removeItem(
                   Amount
                 </th>
 
+                <th className="p-5 text-left">
+                  Status
+                </th>
+
+                <th className="p-5 text-left">
+                  WhatsApp
+                </th>
+
               </tr>
 
             </thead>
 
             <tbody>
 
-              {leads.map(
+              {filteredLeads.map(
                 (lead) => (
 
                   <tr
@@ -192,11 +282,15 @@ sessionStorage.removeItem(
                     className="border-b hover:bg-slate-50 transition"
                   >
 
+                    {/* NAME */}
+
                     <td className="p-5 font-semibold">
 
                       {lead.name}
 
                     </td>
+
+                    {/* PHONE */}
 
                     <td className="p-5">
 
@@ -204,15 +298,72 @@ sessionStorage.removeItem(
 
                     </td>
 
+                    {/* LOAN TYPE */}
+
                     <td className="p-5">
 
                       {lead.loanType}
 
                     </td>
 
+                    {/* AMOUNT */}
+
                     <td className="p-5 text-green-600 font-semibold">
 
                       ₹{lead.loanAmount}
+
+                    </td>
+
+                    {/* STATUS */}
+
+                    <td className="p-5">
+
+                      <select
+                        value={
+                          lead.status || "New"
+                        }
+                        onChange={(e) =>
+                          updateStatus(
+                            lead.id,
+                            e.target.value
+                          )
+                        }
+                        className="border rounded-xl px-3 py-2"
+                      >
+
+                        <option>
+                          New
+                        </option>
+
+                        <option>
+                          Contacted
+                        </option>
+
+                        <option>
+                          Approved
+                        </option>
+
+                        <option>
+                          Rejected
+                        </option>
+
+                      </select>
+
+                    </td>
+
+                    {/* WHATSAPP */}
+
+                    <td className="p-5">
+
+                      <a
+                        href={`https://wa.me/91${lead.phone}`}
+                        target="_blank"
+                        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl"
+                      >
+
+                        WhatsApp
+
+                      </a>
 
                     </td>
 
