@@ -1,6 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
+
+import { useRouter } from "next/navigation";
 
 import { db } from "@/lib/firebase";
 
@@ -11,27 +16,70 @@ import {
 
 export default function AdminPage() {
 
-  const [leads, setLeads] = useState<any[]>([]);
+  const router = useRouter();
+
+  const [leads, setLeads] =
+    useState<any[]>([]);
+
+  // =========================================
+  // LOGIN CHECK
+  // =========================================
 
   useEffect(() => {
 
-    const fetchLeads = async () => {
-
-      const querySnapshot = await getDocs(
-        collection(db, "loanInquiries")
+    const isLoggedIn =
+      localStorage.getItem(
+        "adminLoggedIn"
       );
 
-      const data = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+    if (!isLoggedIn) {
 
-      setLeads(data);
-    };
+      router.push("/login");
+
+      return;
+    }
+
+    const fetchLeads =
+      async () => {
+
+        const querySnapshot =
+          await getDocs(
+            collection(
+              db,
+              "loanInquiries"
+            )
+          );
+
+        const data =
+          querySnapshot.docs.map(
+            (doc) => ({
+
+              id: doc.id,
+
+              ...doc.data(),
+
+            })
+          );
+
+        setLeads(data);
+      };
 
     fetchLeads();
 
-  }, []);
+  }, [router]);
+
+  // =========================================
+  // LOGOUT
+  // =========================================
+
+  const handleLogout = () => {
+
+    localStorage.removeItem(
+      "adminLoggedIn"
+    );
+
+    router.push("/login");
+  };
 
   return (
 
@@ -39,7 +87,9 @@ export default function AdminPage() {
 
       {/* HEADER */}
 
-      <div className="flex items-center justify-between mb-10">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-10">
+
+        {/* LEFT */}
 
         <div className="flex items-center gap-4">
 
@@ -67,9 +117,35 @@ export default function AdminPage() {
 
         </div>
 
-        <div className="bg-blue-600 text-white px-6 py-3 rounded-2xl font-semibold">
+        {/* RIGHT */}
 
-          Total Leads: {leads.length}
+        <div className="flex items-center gap-4">
+
+          <div className="bg-blue-600 text-white px-6 py-3 rounded-2xl font-semibold">
+
+            Total Leads: {leads.length}
+
+          </div>
+
+          <button
+            onClick={() =>
+              router.push("/settings")
+            }
+            className="bg-black hover:bg-gray-800 text-white px-6 py-3 rounded-2xl font-semibold"
+          >
+
+            Settings
+
+          </button>
+
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-2xl font-semibold"
+          >
+
+            Logout
+
+          </button>
 
         </div>
 
@@ -109,40 +185,41 @@ export default function AdminPage() {
 
             <tbody>
 
-              {leads.map((lead) => (
+              {leads.map(
+                (lead) => (
 
-                <tr
-                  key={lead.id}
-                  className="border-b hover:bg-slate-50"
-                >
+                  <tr
+                    key={lead.id}
+                    className="border-b hover:bg-slate-50 transition"
+                  >
 
-                  <td className="p-5 font-semibold">
+                    <td className="p-5 font-semibold">
 
-                    {lead.name}
+                      {lead.name}
 
-                  </td>
+                    </td>
 
-                  <td className="p-5">
+                    <td className="p-5">
 
-                    {lead.phone}
+                      {lead.phone}
 
-                  </td>
+                    </td>
 
-                  <td className="p-5">
+                    <td className="p-5">
 
-                    {lead.loanType}
+                      {lead.loanType}
 
-                  </td>
+                    </td>
 
-                  <td className="p-5 text-green-600 font-semibold">
+                    <td className="p-5 text-green-600 font-semibold">
 
-                    ₹{lead.loanAmount}
+                      ₹{lead.loanAmount}
 
-                  </td>
+                    </td>
 
-                </tr>
-
-              ))}
+                  </tr>
+                )
+              )}
 
             </tbody>
 
